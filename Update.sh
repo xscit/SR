@@ -13,7 +13,7 @@ trap "rm -rf $TEMP_DIR" EXIT
 # Expand a RULE-SET source: append ,POLICY to each rule line
 expand_ruleset() {
   local src="$1" policy="$2"
-  while IFS= read -r rule; do
+  while IFS= read -r rule || [[ -n "$rule" ]]; do
     [[ -z "$rule" || "$rule" == \#* ]] && continue
     echo "${rule},${policy}"
   done < "$src"
@@ -22,7 +22,7 @@ expand_ruleset() {
 # Expand a DOMAIN-SET source: convert domains to DOMAIN/DOMAIN-SUFFIX
 expand_domainset() {
   local src="$1" policy="$2"
-  while IFS= read -r domain; do
+  while IFS= read -r domain || [[ -n "$domain" ]]; do
     [[ -z "$domain" || "$domain" == \#* ]] && continue
     if [[ "$domain" == .* ]]; then
       echo "DOMAIN-SUFFIX,${domain#.},${policy}"
@@ -40,7 +40,7 @@ download() {
 }
 
 # --- Single-pass processing ---
-while IFS= read -r line; do
+while IFS= read -r line || [[ -n "$line" ]]; do
 
   # Commented local RULE-SET: # RULE-SET,<file>,POLICY
   if [[ "$line" =~ ^#\ RULE-SET,([^,]+),([^,]+)$ ]]; then
