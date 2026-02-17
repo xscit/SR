@@ -1,0 +1,35 @@
+name: Update Shadowrocket Config
+
+on:
+  push:
+    paths:
+      - 'Conf.conf'
+      - 'HK'
+      - 'US'
+      - 'DC'
+      - 'Update.sh'
+  # Auto-update weekly to refresh remote SukkaW rules
+  schedule:
+    - cron: '0 6 * * *'
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate config
+        run: bash Update.sh
+
+      - name: Commit & push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add VPS.conf
+          git diff --cached --quiet || git commit -m "chore: auto-update VPS.conf"
+          git push
