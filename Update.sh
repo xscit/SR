@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Build shadowrocket.conf from Conf.conf template
+# Build VPS.conf from Conf.conf template
 # Processes all RULE-SET / DOMAIN-SET directives (both local and remote)
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -83,4 +83,4 @@ while IFS= read -r line || [[ -n "$line" ]]; do
 
 done < "$TEMPLATE" > "$OUTPUT"
 
-echo "✅ shadowrocket.conf generated at $(date)"
+echo "✅ VPS.conf generated at $(date)"
